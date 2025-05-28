@@ -43,7 +43,9 @@
   - 이후에 시간이 된다면 진행해보고 싶은 기능 : Challenge 장려로 한정 이벤트로 보상의 수준을 50% 증가시키는 기간 한정 이벤트를 진행해보고 싶습니다.
 
 <h3>## ERD </h3>
-  - ![image](https://github.com/user-attachments/assets/f2f18ef2-21f1-4224-8e10-5c6347bd4903)
+
+![Database ERD](images/Database_ERD.png)
+
 
 
 <h3>## Trouble Shooting</h3>
