@@ -44,7 +44,7 @@
 
 <h3>## ERD </h3>
 
-![ERD 다이어그램](images/erd_diagram.png)
+![Database ERD](images/Database_ERD.png)
 
 
 
