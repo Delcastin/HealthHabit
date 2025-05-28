@@ -38,6 +38,8 @@
   >. 2순위 : 운동 목록 조회 기능, 운동 진행 기능, 운동 코스 등록/수정/삭제 기능
   >. 3순위 : Challenge 생성/진행/완료 기능, 보상 기능
 
+  >. 이후에 시간이 된다면 진행해보고 싶은 기능 : Challenge 장려로 한정 이벤트로 보상의 수준을 50% 증가시키는 기간 한정 이벤트를 진행해보고 싶습니다.
+
 <h3>## ERD </h3>
   >. ![image](https://github.com/user-attachments/assets/f2f18ef2-21f1-4224-8e10-5c6347bd4903)
 
@@ -46,9 +48,20 @@
 [go to the trouble shooting section]
 
 <h4>### Tech Stack</h4>
-  <div align=center>
-    <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
-    <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
-    <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
-    <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-  </div>
+-. 개발 도구
+  >. Java
+  >. Spring Boot
+    *. Spring Security
+    *. Validation
+    *. JPA
+    *. Gradle
+  >. Elastic Search
+  
+
+-. 테스트 도구
+  >. JUnit5
+
+-. 데이터베이스(DB)
+  >. MySQL
+
+
