@@ -44,7 +44,7 @@
 
 <h3>## ERD </h3>
 
-![Database ERD](images/Database_ERD.png)
+![Database ERD](/Database_ERD.png)
 
 
 
