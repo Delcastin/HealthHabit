@@ -1,7 +1,6 @@
 package com.zerobase.healthhabit.dto;
 
 
-import com.zerobase.healthhabit.entity.ExerciseType;
 import lombok.Getter;
 import lombok.Setter;
 
