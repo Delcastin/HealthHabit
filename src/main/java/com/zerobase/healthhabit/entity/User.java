@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "service_user")
 public class User { // 사용자 Entity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

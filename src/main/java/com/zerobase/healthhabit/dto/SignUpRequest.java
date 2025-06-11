@@ -28,4 +28,5 @@ public class SignUpRequest {
     private String accountNumber;
     private String accountHolder;
 
+
 }

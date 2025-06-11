@@ -4,6 +4,7 @@ package com.zerobase.healthhabit.repository;
 import com.zerobase.healthhabit.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
@@ -14,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findById(Long id); // 사용자 ID 조회
 
-    String email(String email);
+    Optional<User> findByUsername(String username); // 사용자 이름 조회
 }
