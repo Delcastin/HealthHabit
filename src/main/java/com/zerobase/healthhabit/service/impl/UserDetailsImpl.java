@@ -1,7 +1,6 @@
 package com.zerobase.healthhabit.service.impl;
 
 import com.zerobase.healthhabit.entity.User;
-import com.zerobase.healthhabit.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

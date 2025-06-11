@@ -1,17 +1,14 @@
 package com.zerobase.healthhabit.controller;
 
 
-import co.elastic.clients.elasticsearch.security.ChangePasswordRequest;
 import com.zerobase.healthhabit.dto.ChangePasswordForm;
 import com.zerobase.healthhabit.dto.EditForm;
 import com.zerobase.healthhabit.dto.SignUpRequest;
-import com.zerobase.healthhabit.dto.UserResponse;
 import com.zerobase.healthhabit.entity.ExerciseType;
 import com.zerobase.healthhabit.entity.User;
 import com.zerobase.healthhabit.service.impl.UserDetailsImpl;
 import com.zerobase.healthhabit.service.impl.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
