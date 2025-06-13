@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>승인 대기 사용자 목록</title>
+</head>
+<body>
+<h2>승인 대기 사용자</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>이메일</th>
+        <th>이름</th>
+        <th>상태</th>
+        <th>작업</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.username}"></td>
+        <td>대기 중</td>
+        <td>
+            <form th:action="@{/admin/approve/{userId}(userId=${user.id})}" method="post">
+                <button type="submit">승인하기</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

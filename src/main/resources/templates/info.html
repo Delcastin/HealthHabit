@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>마이페이지</title>
+</head>
+<body>
+<h2>MyPage</h2>
+
+<div>
+  <p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+  <p><strong>이름:</strong> <span th:text="${user.username}"></span></p>
+  <p><strong>선호 운동:</strong> <span th:text="${user.preferExercise}"></span></p>
+  <p><strong>은행명:</strong> <span th:text="${user.bankName}"></span></p>
+  <p><strong>계좌번호:</strong> <span th:text="${user.accountNumber}"></span></p>
+  <p><strong>예금주:</strong> <span th:text="${user.accountHolder}"></span></p>
+</div>
+<nav>
+  <ul>
+    <li><a th:href="@{/home}">홈으로</a></li>
+    <li><a th:href="@{/user/edit}">정보 수정하기</a></li>
+  </ul>
+</nav>
+
+
+</body>
+</html>
