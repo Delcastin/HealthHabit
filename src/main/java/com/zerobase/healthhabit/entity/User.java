@@ -22,11 +22,13 @@ public class User { // 사용자 Entity
 
     private String username; // 사용자 이름
 
+    @Column(nullable = false)
     private String password; // 비밀번호
 
     @Enumerated(EnumType.STRING)
     private ExerciseType preferExercise; // 선호하는 운동 종류
 
+    @Column(updatable = false)
     private LocalDateTime createdAt; // 가입 일시
 
     private String bankName; // 은행명
