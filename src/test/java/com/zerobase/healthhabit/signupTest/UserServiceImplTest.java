@@ -1,14 +1,16 @@
 package com.zerobase.healthhabit.signupTest;
 
 
-import com.zerobase.healthhabit.dto.SignUpRequest;
-import com.zerobase.healthhabit.dto.UserResponse;
+import com.zerobase.healthhabit.dto.user.ChangePasswordRequest;
+import com.zerobase.healthhabit.dto.user.SignUpRequest;
+import com.zerobase.healthhabit.dto.user.UserResponse;
 import com.zerobase.healthhabit.entity.ExerciseType;
 import com.zerobase.healthhabit.entity.User;
 import com.zerobase.healthhabit.entity.UserRole;
 import com.zerobase.healthhabit.exception.UserInfoDoesNotMatchException;
 import com.zerobase.healthhabit.repository.UserRepository;
-import com.zerobase.healthhabit.service.impl.UserServiceImpl;
+import com.zerobase.healthhabit.service.impl.user.UserServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -98,7 +101,7 @@ public class UserServiceImplTest {
                 () -> userService.signUp(request)
         );
 
-        assertEquals("해당 이메일 사용시 중복됩니다.", exception.getMessage());
+        assertEquals("해당 이메일은 이미 사용 중입니다.", exception.getMessage());
 
         verify(userRepository).existsByEmail(request.getEmail());
         verify(userRepository, never()).save(any(User.class)); // 저장이 호출되지 않아야 함
@@ -123,7 +126,7 @@ public class UserServiceImplTest {
 
         // when
 
-        User approvedUser = userService.approveUser(userId);
+        UserResponse approvedUser = userService.approveUser(userId);
         assertEquals(UserRole.ADMIN, approvedUser.getRole());
         verify(userRepository).findById(userId);
         verify(userRepository).save(user);
@@ -135,7 +138,7 @@ public class UserServiceImplTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> userService.approveUser(userId));
+        assertThrows(EntityNotFoundException.class, () -> userService.approveUser(userId));
         verify(userRepository).findById(userId);
         verify(userRepository, never()).save(any(User.class));
     }
@@ -155,10 +158,10 @@ public class UserServiceImplTest {
 
         given(userRepository.findById(userId)).willReturn(Optional.of(user));
 
-        UserResponse result = UserResponse.from(userService.getUserById(userId));
+        UserResponse result = userService.getUserById(userId);
 
         assertThat(result.getEmail()).isEqualTo("test@zerobase.com");
-        assertThat(result.getUserName()).isEqualTo("test");
+        assertThat(result.getUsername()).isEqualTo("test");
         assertThat(result.getRole()).isEqualTo(UserRole.USER);
         assertThat(result.getPreferExercise()).isEqualTo(ExerciseType.CARDIO);
 
@@ -182,7 +185,7 @@ public class UserServiceImplTest {
                 .email("test@zerobase.com")
                 .preferExercise(ExerciseType.STRENGTH)
                 .role(UserRole.USER)
-                .userName("Fake User")
+                .username("Fake User")
                 .build();
         // when
 
@@ -195,12 +198,58 @@ public class UserServiceImplTest {
     private void validateUserInfo(User user, UserResponse fakeUser) {
         if (!Objects.equals(user.getId(), fakeUser.getId()) ||
                 !Objects.equals(user.getEmail(), fakeUser.getEmail()) ||
-                !Objects.equals(user.getUsername(), fakeUser.getUserName()) ||
+                !Objects.equals(user.getUsername(), fakeUser.getUsername()) ||
                 !Objects.equals(user.getRole(), fakeUser.getRole()) ||
                 !Objects.equals(user.getPreferExercise(), fakeUser.getPreferExercise())) {
             throw new UserInfoDoesNotMatchException();
         }
     }
+
+
+    @Test // 마이페이지 - 비밀번호 변경 성공
+    void updatePassword_WhenCurrentPasswordMatches_UpdatesPassword() {
+        Long userId = 1L;
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setCurrentPassword("oldPass");
+        request.setNewPassword("newPass");
+
+        User user = User.builder()
+                .id(userId)
+                .password("encodedOldPass")
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("oldPass", "encodedOldPass")).thenReturn(true);
+        when(passwordEncoder.encode("newPass")).thenReturn("encodedNewPass");
+
+        userService.updatePassword(userId, request);
+
+        verify(userRepository).save(user);
+        assertEquals("encodedNewPass", user.getPassword());
+    }
+
+    @Test // 마이페이지 - 비밀번호 변경 실패 - 현재 비밀번호를 잘못 입력한 경우
+    void updatePassword_WhenCurrentPasswordDoesNotMatch_ThrowsException() {
+        Long userId = 1L;
+        ChangePasswordRequest request = new ChangePasswordRequest();
+        request.setCurrentPassword("wrongPass");
+        request.setNewPassword("newPass");
+
+        User user = User.builder()
+                .id(userId)
+                .password("encodedOldPass")
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("wrongPass", "encodedOldPass")).thenReturn(false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> userService.updatePassword(userId, request));
+
+        assertEquals("현재 비밀번호가 올바르지 않습니다.", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
 
 
 }

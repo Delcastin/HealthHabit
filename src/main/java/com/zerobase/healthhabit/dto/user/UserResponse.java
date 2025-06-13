@@ -1,4 +1,4 @@
-package com.zerobase.healthhabit.dto;
+package com.zerobase.healthhabit.dto.user;
 
 
 import com.zerobase.healthhabit.entity.ExerciseType;
@@ -13,7 +13,7 @@ public class UserResponse {
 
     private Long id;
     private String email;
-    private String userName;
+    private String username;
 
     private UserRole role;
 
@@ -23,7 +23,7 @@ public class UserResponse {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .userName(user.getUsername())
+                .username(user.getUsername())
                 .role(user.getRole())
                 .preferExercise(user.getPreferExercise())
                 .build();
