@@ -34,12 +34,23 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class)// form login 비활성화
                 .authorizeHttpRequests(auth -> auth
+                        // 사용자 권한
                         .requestMatchers("/api/user/**").hasRole("USER")
+
+                        // 관리자 권한
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/exercises/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/exercises").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/exercises/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/exercises/**").hasRole("ADMIN")
+
+                        // 사용자도 접근 가능한 운동 시작/완료
+                        .requestMatchers(HttpMethod.POST, "/api/exercises/start/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/exercises/complete/**").hasAnyRole("USER", "ADMIN")
+
+                        // 나머지는 인증 필요
                         .anyRequest().authenticated()
+
+
                 );
 
         return http.build();
