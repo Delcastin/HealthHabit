@@ -42,14 +42,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/exercises").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/exercises/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/exercises/**").hasRole("ADMIN")
-
                         // 사용자도 접근 가능한 운동 시작/완료
                         .requestMatchers(HttpMethod.POST, "/api/exercises/start/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/exercises/complete/**").hasAnyRole("USER", "ADMIN")
-
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
-
 
                 );
 
