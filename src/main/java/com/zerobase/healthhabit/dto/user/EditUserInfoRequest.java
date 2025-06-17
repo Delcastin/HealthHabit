@@ -1,19 +1,17 @@
-package com.zerobase.healthhabit.dto;
-
+package com.zerobase.healthhabit.dto.user;
 
 import com.zerobase.healthhabit.entity.ExerciseType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
-public class EditForm {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class EditUserInfoRequest {
 
     private String username;
-    private ExerciseType exerciseType;
-
+    private ExerciseType preferExercise;
     private String bankName;
     private String accountNumber;
     private String accountHolder;
-
 }

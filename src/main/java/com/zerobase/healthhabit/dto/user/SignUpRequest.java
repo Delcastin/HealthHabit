@@ -1,4 +1,4 @@
-package com.zerobase.healthhabit.dto;
+package com.zerobase.healthhabit.dto.user;
 
 import com.zerobase.healthhabit.entity.ExerciseType;
 import jakarta.validation.constraints.Email;
@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 public class SignUpRequest {
 
     @Email

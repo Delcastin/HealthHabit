@@ -1,23 +1,20 @@
-package com.zerobase.healthhabit.service.impl;
+package com.zerobase.healthhabit.service.impl.user;
 
-import com.zerobase.healthhabit.dto.ChangePasswordForm;
-import com.zerobase.healthhabit.dto.EditForm;
-import com.zerobase.healthhabit.dto.SignUpRequest;
+import com.zerobase.healthhabit.dto.user.ChangePasswordRequest;
+import com.zerobase.healthhabit.dto.user.EditUserInfoRequest;
+import com.zerobase.healthhabit.dto.user.SignUpRequest;
+import com.zerobase.healthhabit.dto.user.UserResponse;
 import com.zerobase.healthhabit.entity.User;
 import com.zerobase.healthhabit.entity.UserRole;
 import com.zerobase.healthhabit.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 
 @Service
-@Builder
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -26,9 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signUp(SignUpRequest request) {
-
-        if(userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("해당 이메일 사용시 중복됩니다.");
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("해당 이메일은 이미 사용 중입니다.");
         }
 
         User user = User.builder()
@@ -39,16 +35,15 @@ public class UserServiceImpl implements UserService {
                 .accountNumber(request.getAccountNumber())
                 .accountHolder(request.getAccountHolder())
                 .preferExercise(request.getPreferExercise())
-                .role(UserRole.USER) // 관리자 승인 절차를 위해 일반 사용자로 무조건으로 정의한다.
+                .role(UserRole.USER)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
-
     }
 
     @Override
-    public User approveUser(Long userId) {
+    public UserResponse approveUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 사용자를 찾을 수 없습니다."));
 
@@ -57,51 +52,43 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setRole(UserRole.ADMIN);
-
-        return userRepository.save(user);
+        return UserResponse.from(userRepository.save(user));
     }
 
+
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+        return UserResponse.from(user);
     }
 
     @Override
-    public void updateAccountInfo(Long userId, EditForm editForm) {
+    public void updateAccountInfo(Long userId, EditUserInfoRequest editForm) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
-        // 계좌 정보 수정
+
         user.setBankName(editForm.getBankName());
         user.setAccountNumber(editForm.getAccountNumber());
         user.setAccountHolder(editForm.getAccountHolder());
-
-        // 기본 정보 수정
-        user.setPreferExercise(editForm.getExerciseType());
+        user.setPreferExercise(editForm.getPreferExercise());
         user.setUsername(editForm.getUsername());
 
         userRepository.save(user);
-
     }
 
     @Override
-    public void updatePassword(Long userId, ChangePasswordForm form) {
+    public void updatePassword(Long userId, ChangePasswordRequest form) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        if(!passwordEncoder.matches(form.getCurrentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(form.getCurrentPassword(), user.getPassword())) {
             throw new IllegalArgumentException("현재 비밀번호가 올바르지 않습니다.");
         }
 
-        String newEncodedPassword = passwordEncoder.encode(form.getNewPassword());
-        user.setPassword(newEncodedPassword);
-
+        user.setPassword(passwordEncoder.encode(form.getNewPassword()));
         userRepository.save(user);
     }
 
-    @Override
-    public List<User> getPendingUsers() {
-        return List.of();
-    }
 
 }
