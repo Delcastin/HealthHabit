@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 
 @Service
@@ -61,6 +62,54 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .totalScore(saved.getTotalScore())
                 .rewardAmount(saved.getRewardAmount())
                 .isCompleted(saved.getIsCompleted())
+                .exerciseLevel(saved.getLevel())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public void completeChallenge(Long userId, Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
+        if (!challenge.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인의 챌린지에만 접근할 수 있습니다.");
+        }
+        if (Boolean.TRUE.equals(challenge.getIsCompleted())) {
+            throw new IllegalStateException("이미 완료된 챌린지입니다.");
+        }
+        challenge.setIsCompleted(true);
+        challengeRepository.save(challenge);
+    }
+
+    @Override
+    public List<ChallengeResponse> getUserChallenges(Long userId) {
+        List<Challenge> challenges = challengeRepository.findByUserId(userId);
+        return challenges.stream()
+                .map(c -> ChallengeResponse.builder()
+                        .challengeId(c.getId())
+                        .challengeName(c.getChallengeName())
+                        .totalScore(c.getTotalScore())
+                        .rewardAmount(c.getRewardAmount())
+                        .isCompleted(c.getIsCompleted())
+                        .exerciseLevel(c.getLevel())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public ChallengeResponse getChallenge(Long userId, Long challengeId) {
+        Challenge c = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
+        if (!c.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("본인의 챌린지에만 접근할 수 있습니다.");
+        }
+        return ChallengeResponse.builder()
+                .challengeId(c.getId())
+                .challengeName(c.getChallengeName())
+                .totalScore(c.getTotalScore())
+                .rewardAmount(c.getRewardAmount())
+                .isCompleted(c.getIsCompleted())
+                .exerciseLevel(c.getLevel())
                 .build();
     }
 
