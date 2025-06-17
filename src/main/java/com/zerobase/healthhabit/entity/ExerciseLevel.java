@@ -1,6 +1,17 @@
 package com.zerobase.healthhabit.entity;
 
-public enum ExerciseLevel {
+import lombok.Getter;
 
-    EASY, MEDIUM, HARD;
+@Getter
+public enum ExerciseLevel {
+    EASY(2),
+    MEDIUM(4),
+    HARD(6);
+
+    private final int score;
+
+    ExerciseLevel(int score) {
+        this.score = score;
+    }
+
 }

@@ -30,9 +30,9 @@ public class ExerciseController {
 
     // 운동 목록 조회하기
     @GetMapping
-    public ExerciseCourseListResponse<ExerciseCourse> viewExerciseCourseList(Pageable pageable,
-                                                                             @ModelAttribute @Valid ExerciseCourseSearchRequest searchRequest) {
-        Page<ExerciseCourse> page = exerciseService.getExerciseCourses(pageable);
+    public ExerciseCourseListResponse<ExerciseCourseResponse> viewExerciseCourseList(Pageable pageable,
+                                                                                        @ModelAttribute @Valid ExerciseCourseSearchRequest searchRequest) {
+        Page<ExerciseCourseResponse> page = exerciseService.getExerciseCourses(pageable);
 
         return new ExerciseCourseListResponse<>(
                 page.getContent(),
@@ -44,6 +44,7 @@ public class ExerciseController {
                 page.isLast()
         );
     }
+
 
     // 운동 Course 생성하기
 

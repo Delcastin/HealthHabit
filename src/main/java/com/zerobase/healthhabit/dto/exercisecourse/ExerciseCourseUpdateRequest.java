@@ -16,5 +16,6 @@ public class ExerciseCourseUpdateRequest {
 
     private ExerciseType exerciseType;
     private Integer durationMinutes;
-    private String videoUrl;
+
+    private Long exerciseVideoId;
 }

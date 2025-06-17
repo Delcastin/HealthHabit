@@ -2,12 +2,15 @@ package com.zerobase.healthhabit.service.impl.exercise;
 
 
 import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseCreateRequest;
+import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseResponse;
 import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseUpdateRequest;
 import com.zerobase.healthhabit.entity.ExerciseCourse;
 import com.zerobase.healthhabit.entity.ExerciseSession;
+import com.zerobase.healthhabit.entity.ExerciseVideo;
 import com.zerobase.healthhabit.entity.User;
 import com.zerobase.healthhabit.repository.ExerciseRepository;
 import com.zerobase.healthhabit.repository.ExerciseSessionRepository;
+import com.zerobase.healthhabit.repository.ExerciseVideoRepository;
 import com.zerobase.healthhabit.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -23,17 +26,20 @@ public class ExerciseServiceImpl implements ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
     private final ExerciseSessionRepository exerciseSessionRepository;
+    private final ExerciseVideoRepository exerciseVideoRepository;
 
 
-    public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserRepository userRepository, ExerciseSessionRepository exerciseSessionRepository) {
+    public ExerciseServiceImpl(ExerciseRepository exerciseRepository, UserRepository userRepository, ExerciseSessionRepository exerciseSessionRepository, ExerciseVideoRepository exerciseVideoRepository) {
         this.exerciseRepository = exerciseRepository;
         this.userRepository = userRepository;
         this.exerciseSessionRepository = exerciseSessionRepository;
+        this.exerciseVideoRepository = exerciseVideoRepository;
     }
 
     @Override
-    public Page<ExerciseCourse> getExerciseCourses(Pageable pageable) {
-        return exerciseRepository.findAll(pageable);
+    public Page<ExerciseCourseResponse> getExerciseCourses(Pageable pageable) {
+        return exerciseRepository.findAll(pageable)
+                .map(ExerciseCourseResponse::fromExerciseCourse);
     }
 
     @Override
@@ -44,30 +50,42 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     @Override
     public ExerciseCourse createExercise(ExerciseCourseCreateRequest request) {
+        ExerciseVideo exerciseVideo = null;
+        if (request.getExerciseVideoId() != null) {
+            exerciseVideo = exerciseVideoRepository.findById(request.getExerciseVideoId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 영상이 존재하지 않습니다."));
+        }
 
         ExerciseCourse course = ExerciseCourse.builder()
                 .exerciseName(request.getExerciseName())
                 .exerciseType(request.getExerciseType())
                 .exerciseDate(request.getExerciseDate())
-                .videoUrl(request.getVideoUrl())
                 .durationMinutes(request.getDurationMinutes())
+                .exerciseVideo(exerciseVideo)
                 .build();
 
         return exerciseRepository.save(course);
     }
 
+
     @Override
     public ExerciseCourse updateExercise(Long id, ExerciseCourseUpdateRequest exercise) {
         ExerciseCourse existingCourse = findById(id);
+
+        ExerciseVideo exerciseVideo = null;
+        if (exercise.getExerciseVideoId() != null) {
+            exerciseVideo = exerciseVideoRepository.findById(exercise.getExerciseVideoId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 영상이 존재하지 않습니다."));
+        }
+
+        existingCourse.setExerciseName(exercise.getExerciseName());
         existingCourse.setDurationMinutes(exercise.getDurationMinutes());
         existingCourse.setExerciseType(exercise.getExerciseType());
-        existingCourse.setVideoUrl(exercise.getVideoUrl());
-        existingCourse.setExerciseName(exercise.getExerciseName());
-
-
+        existingCourse.setExerciseVideo(exerciseVideo);
 
         return exerciseRepository.save(existingCourse);
     }
+
 
     @Override
     public void deleteExercise(Long id) {

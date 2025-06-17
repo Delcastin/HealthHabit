@@ -30,9 +30,13 @@ public class ExerciseCourse {
 
     private int durationMinutes; // 코스 1세트당 시간
 
-    private String videoUrl; // 비디오 URL
+    private String videoUrl;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "exercise_video_id")
     private ExerciseVideo exerciseVideo;
+
+    @Enumerated(EnumType.STRING)
+    private ExerciseLevel exerciseLevel;  // EASY, MEDIUM, HARD
+
 }

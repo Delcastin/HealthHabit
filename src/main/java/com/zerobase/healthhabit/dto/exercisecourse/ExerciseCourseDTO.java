@@ -14,6 +14,7 @@ public class ExerciseCourseDTO {
     private Long id;
     private String exerciseName;
     private String videoUrl;
+    private String videoTitle;
     private int durationMinutes;
     private ExerciseType exerciseType;
 
@@ -21,9 +22,14 @@ public class ExerciseCourseDTO {
         return ExerciseCourseDTO.builder()
                 .id(exerciseCourse.getId())
                 .exerciseName(exerciseCourse.getExerciseName())
-                .videoUrl(exerciseCourse.getVideoUrl())
+                .videoUrl(
+                        exerciseCourse.getExerciseVideo() != null
+                                ? exerciseCourse.getExerciseVideo().getYoutubeUrl()
+                                : null
+                )
                 .durationMinutes(exerciseCourse.getDurationMinutes())
                 .exerciseType(exerciseCourse.getExerciseType())
                 .build();
     }
+
 }

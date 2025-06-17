@@ -3,6 +3,7 @@ package com.zerobase.healthhabit;
 import com.zerobase.healthhabit.entity.*;
 import com.zerobase.healthhabit.repository.ExerciseRepository;
 import com.zerobase.healthhabit.repository.ExerciseSessionRepository;
+import com.zerobase.healthhabit.repository.ExerciseVideoRepository;
 import com.zerobase.healthhabit.repository.UserRepository;
 import com.zerobase.healthhabit.service.impl.UserDetailsImpl;
 import jakarta.transaction.Transactional;
@@ -44,6 +45,11 @@ public class ExerciseIntegrationTest {
     private User testUser;
     private ExerciseCourse testCourse;
 
+    @Autowired
+    private ExerciseVideoRepository exerciseVideoRepository;
+
+    private ExerciseVideo testVideo;
+
     @BeforeEach
     void setUp(){
         // 사용자 저장
@@ -54,12 +60,18 @@ public class ExerciseIntegrationTest {
                         .role(UserRole.USER)
                 .build());
 
+        testVideo = exerciseVideoRepository.save(ExerciseVideo.builder()
+                        .videoName("testVideo")
+                        .durationMinutes(20)
+                        .exerciseLevel(ExerciseLevel.HARD)
+                .build());
+
         // 운동 코스 저장
         testCourse = exerciseRepository.save(ExerciseCourse.builder()
                         .exerciseName("StrengthTwenty")
                         .exerciseType(ExerciseType.STRENGTH)
                         .durationMinutes(20)
-                        .videoUrl("https://youtube.com/strength/1247yw9dfh")
+                        .exerciseVideo(testVideo)
                 .build());
     }
 

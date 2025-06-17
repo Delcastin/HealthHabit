@@ -1,6 +1,7 @@
 package com.zerobase.healthhabit.service.impl.exercise;
 
 import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseCreateRequest;
+import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseResponse;
 import com.zerobase.healthhabit.dto.exercisecourse.ExerciseCourseUpdateRequest;
 import com.zerobase.healthhabit.entity.ExerciseCourse;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,7 @@ import java.nio.file.AccessDeniedException;
 public interface ExerciseService {
 
     // 운동 목록 전체 조회하기
-    Page<ExerciseCourse> getExerciseCourses(Pageable pageable);
+    Page<ExerciseCourseResponse> getExerciseCourses(Pageable pageable);
 
     // 운동 Course 검색하기
     ExerciseCourse findById(Long id);

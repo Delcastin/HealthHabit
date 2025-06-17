@@ -28,7 +28,16 @@ public class ExerciseCourseResponse {
                 .exerciseName(exerciseCourse.getExerciseName())
                 .exerciseDate(exerciseCourse.getExerciseDate())
                 .durationMinutes(exerciseCourse.getDurationMinutes())
-                .videoUrl(exerciseCourse.getVideoUrl())
+                .videoUrl(
+                        exerciseCourse.getExerciseVideo() != null
+                                ? exerciseCourse.getExerciseVideo().getYoutubeUrl()
+                                : null
+                )
+                .challengeId(
+                        exerciseCourse.getChallenge() != null
+                                ? exerciseCourse.getChallenge().getId()
+                                : null
+                )
                 .build();
     }
 }

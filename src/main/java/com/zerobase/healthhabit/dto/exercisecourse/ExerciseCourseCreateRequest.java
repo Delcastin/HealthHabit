@@ -29,7 +29,8 @@ public class ExerciseCourseCreateRequest {
     private int durationMinutes;
 
 
-    private String videoUrl;
+    @NotNull(message = "운동 영상 ID 입력은 필수입니다.")
+    private Long exerciseVideoId;
 
     private Long challengeId;
 }

@@ -6,6 +6,7 @@ import com.zerobase.healthhabit.entity.ExerciseSession;
 import com.zerobase.healthhabit.entity.User;
 import com.zerobase.healthhabit.repository.ExerciseRepository;
 import com.zerobase.healthhabit.repository.ExerciseSessionRepository;
+import com.zerobase.healthhabit.repository.ExerciseVideoRepository;
 import com.zerobase.healthhabit.repository.UserRepository;
 import com.zerobase.healthhabit.service.impl.exercise.ExerciseServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,13 +27,15 @@ public class ExerciseServiceTest {
     private UserRepository userRepository;
     private ExerciseRepository exerciseRepository;
     private ExerciseSessionRepository exerciseSessionRepository;
+    private ExerciseVideoRepository exerciseVideoRepository;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
         exerciseRepository = mock(ExerciseRepository.class);
         exerciseSessionRepository = mock(ExerciseSessionRepository.class);
-        exerciseService = new ExerciseServiceImpl(exerciseRepository, userRepository, exerciseSessionRepository);
+        exerciseVideoRepository = mock(ExerciseVideoRepository.class);
+        exerciseService = new ExerciseServiceImpl(exerciseRepository, userRepository, exerciseSessionRepository, exerciseVideoRepository);
     }
 
     @Test
