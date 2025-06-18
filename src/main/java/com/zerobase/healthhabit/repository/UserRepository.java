@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmail(String email); // 이메일 조회
+    Optional<User> findFirstByEmail(String email); // 이메일 조회
 
     boolean existsByEmail(String email); // 이메일이 중복되는지 확인 후 결과 알림.
 
